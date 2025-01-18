@@ -13,6 +13,6 @@ class DataJalanSeeder extends Seeder
      */
     public function run(): void
     {
-        DataJalan::factory(10)->create();
+        DataJalan::factory(50)->create();
     }
 }

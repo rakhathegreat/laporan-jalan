@@ -17,6 +17,17 @@ class DataJalanController extends Controller
         ]);
     }
 
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+
+        DataJalan::whereIn('id', $ids)->delete();
+
+        return response()->json([
+            'success' => "Data deleted successfully"
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -64,6 +75,8 @@ class DataJalanController extends Controller
      */
     public function destroy(DataJalan $dataJalan)
     {
-        //
+        $dataJalan->delete();
+
+        return redirect('/data-jalan');
     }
 }

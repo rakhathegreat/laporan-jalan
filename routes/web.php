@@ -13,3 +13,5 @@ Route::group([], function () {
     Route::view('/maps', 'admin.maps');
     Route::view('/laporan', 'admin.laporan');
 });
+
+Route::delete('/data-jalan', [DataJalanController::class, 'deleteAll'])->name('data-jalan.delete');

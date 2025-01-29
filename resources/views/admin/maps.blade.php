@@ -31,7 +31,8 @@
         // Tambahkan polyline ke peta dengan ukuran awal
         var polyline = L.polyline(latlngs, { 
             color: 'blue', 
-            weight: 1 // Ukuran garis awal 5 piksel
+            weight: 1,
+            opacity: 0.5
         }).addTo(map);
 
         // Fungsi untuk menghitung ketebalan berdasarkan zoom

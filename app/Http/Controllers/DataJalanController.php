@@ -12,15 +12,26 @@ class DataJalanController extends Controller
      */
     public function index()
     {
-        $dataJalan = DataJalan::orderBy('created_at', 'asc');
-
+        $dataJalan = DataJalan::orderBy('created_at', 'desc');
         if (request('search')) {
             $regex = new \MongoDB\BSON\Regex(request('search'), 'i');
             $dataJalan->where('nama', $regex);
-            $dataJalan->orWhere('kelurahan', $regex);
-            $dataJalan->orWhere('kondisi', $regex);
-            $dataJalan->orWhere('rt', $regex);
-            $dataJalan->orWhere('rw', $regex);
+        }
+
+        if (request('kondisi')) {
+            $dataJalan->where('kondisi', request('kondisi'));
+        }
+
+        if (request('kelurahan')) {
+            $dataJalan->where('kelurahan', request('kelurahan'));
+        }
+
+        if (request('rt')) {
+            $dataJalan->where('rt', request('rt'));
+        }
+
+        if (request('rw')) {
+            $dataJalan->where('rw', request('rw'));
         }
 
         return view('admin.data-jalan', [

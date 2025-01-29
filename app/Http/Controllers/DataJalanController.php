@@ -12,8 +12,19 @@ class DataJalanController extends Controller
      */
     public function index()
     {
+        $dataJalan = DataJalan::orderBy('created_at', 'asc');
+
+        if (request('search')) {
+            $regex = new \MongoDB\BSON\Regex(request('search'), 'i');
+            $dataJalan->where('nama', $regex);
+            $dataJalan->orWhere('kelurahan', $regex);
+            $dataJalan->orWhere('kondisi', $regex);
+            $dataJalan->orWhere('rt', $regex);
+            $dataJalan->orWhere('rw', $regex);
+        }
+
         return view('admin.data-jalan', [
-            'dataJalan' => DataJalan::all()
+            'dataJalan' => $dataJalan->get()
         ]);
     }
 
@@ -22,7 +33,6 @@ class DataJalanController extends Controller
         $ids = $request->ids;
 
         DataJalan::whereIn('id', $ids)->delete();
-
         return response()->json([
             'success' => "Data deleted successfully"
         ]);

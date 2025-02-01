@@ -117,16 +117,27 @@
 
     rows.forEach(row => {
         row.style.cursor = "pointer";
+
         row.addEventListener("click", (event) => {
             const firstColumn = row.querySelector("td:first-child");
+            const checkbox = firstColumn?.querySelector("input[type='checkbox']");
+
+            if (event.target === checkbox) {
+                event.stopPropagation();
+                return;
+            }
+
             if (!firstColumn.contains(event.target)) {
-                window.location.href = row.dataset.url; 
-            } else {
-                checkbox = row.querySelector("input[type='checkbox']");
+                window.location.href = row.dataset.url;
+                return;
+            }
+
+            if (checkbox) {
                 checkbox.checked = !checkbox.checked;
             }
         });
     });
+
 
         $(function() {
             $('#selectAll').click(function() {

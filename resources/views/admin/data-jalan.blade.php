@@ -15,6 +15,8 @@
         <button class="bg-red-500 hover:bg-red-700 text-white text-sm font-bold py-2 px-4 rounded" id="deleteButton">
           Hapus Data
         </button>
+        <x-alert>Tidak ada data yang dipilih</x-alert>
+        <x-confirm>Apakah anda yakin ingin menghapus data yang dipilih?</x-confirm>
         <div class="flex gap-4 w-1/3">
             <x-popup class="bg-indigo-500 hover:bg-indigo-700 text-white text-sm font-bold py-2 px-4 rounded" id="openPopup">
                 Filter
@@ -74,7 +76,8 @@
       <table class="min-w-full bg-white" id="clickableTable">
         <thead>
           <tr class="border-b border-gray-300">
-            <th class="py-3 pr-8 pl-4 text-left"><input type="checkbox" name="preference" value="selected" id="selectAll"></th>
+            <th class="py-3 pr-0 pl-4 text-left"><input type="checkbox" name="preference" value="selected" id="selectAll"></th>
+            <th class="py-3 px-0 text-left text-sm font-semibold text-gray-900">No</th>
             <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">Nama Jalan</th>
             <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">RT</th>
             <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">RW</th>
@@ -86,14 +89,14 @@
           @foreach ($dataJalan as $data)
             <tr class=" border-b border-gray-200 hover:bg-gray-100" data-url="/data-jalan/{{ $data->id }}">
               <td class="pl-4"><input type="checkbox" name="preference" value="{{ $data->id }}"></td>
-              <!-- <td class="py-3 pr-6 text-left text-sm font-medium text-gray-900">{{ $loop->iteration }}</td> -->
+              <td class="py-3 pr-6 text-left text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
               <td class="py-3 px-6 text-left text-sm font-medium text-gray-900">{{ $data->nama }}</td>
-              <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->rt }}</td>
-              <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->rw }}</td>
-              <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->kelurahan }}</td>
+              <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->alamat->rt }}</td>
+              <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->alamat->rw }}</td>
+              <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->alamat->kelurahan }}</td>
               <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">
-                <x-kondisi kondisi="{{$data->kondisi}}">
-                    {{ $data->kondisi }}
+                <x-kondisi kondisi="{{$data->kondisi_jalan->kondisi}}">
+                    {{ $data->kondisi_jalan->kondisi }}
                 </x-kondisi>
               </td>
             </tr>
@@ -144,7 +147,7 @@
                 $('input[name="preference"]').prop('checked', $(this).prop('checked'));
             });
 
-            $('#deleteButton').click(function(e) {
+            $('#deleteButton').click(async function(e) {
                 e.preventDefault();
 
                 let ids = [];
@@ -153,11 +156,12 @@
                 });
 
                 if (ids.length === 0) {
-                    alert('Tidak ada data yang dipilih.');
+                    alertAction();
                     return;
                 }
 
-                if (!confirm('Apakah Anda yakin ingin menghapus data yang dipilih?')) {
+                const confirmCheck = await confirmAction();
+                if (!confirmCheck) {
                     return;
                 }
 

@@ -2,13 +2,27 @@
 
 namespace App\Models;
 
-use MongoDB\Laravel\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Alamat;
 
 class DataJalan extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
-    protected $tabel = 'data_jalans';
+    protected $table = 'data_jalan';
     protected $guard = [];
+
+    public function alamat()
+    {
+        return $this->belongsTo(Alamat::class);
+    }
+
+    public function kondisi_jalan()
+    {
+        return $this->belongsTo(KondisiJalan::class);
+    }
 }

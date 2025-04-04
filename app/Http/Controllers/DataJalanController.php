@@ -14,24 +14,32 @@ class DataJalanController extends Controller
     {
         $dataJalan = DataJalan::orderBy('created_at', 'desc');
         if (request('search')) {
-            $regex = new \MongoDB\BSON\Regex(request('search'), 'i');
-            $dataJalan->where('nama', $regex);
+            $regex = '%' . request('search') . '%';
+            $dataJalan->alamat->where('nama', 'LIKE', $regex);
         }
 
         if (request('kondisi')) {
-            $dataJalan->where('kondisi', request('kondisi'));
+            $dataJalan->whereHas('kondisi_jalan', function ($query) {
+                $query->where('kondisi', request('kondisi'));
+            });
         }
 
         if (request('kelurahan')) {
-            $dataJalan->where('kelurahan', request('kelurahan'));
+            $dataJalan->whereHas('alamat', function ($query) {
+                $query->where('kelurahan', request('kelurahan'));
+            });
         }
 
         if (request('rt')) {
-            $dataJalan->where('rt', request('rt'));
+            $dataJalan->whereHas('alamat', function ($query) {
+                $query->where('rt', request('rt'));
+            });
         }
 
         if (request('rw')) {
-            $dataJalan->where('rw', request('rw'));
+            $dataJalan->whereHas('alamat', function ($query) {
+                $query->where('rw', request('rw'));
+            });
         }
 
         return view('admin.data-jalan', [

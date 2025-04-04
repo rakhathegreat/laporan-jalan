@@ -3,7 +3,9 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use App\Models\DataJalan;
+use App\Models\KondisiJalan;
+use App\Models\Alamat;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
@@ -14,17 +16,17 @@ class DataJalanFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = DataJalan::class;
+
     public function definition(): array
     {
         return [
+            'id' => fake()->uuid(),
             'nama' => fake()->name(),
             'lebar' => fake()->numberBetween(1, 10), 
             'panjang' => fake()->numberBetween(500, 2000), 
-            'kondisi' => fake()->randomElement(['Baik', 'Rusak', 'Rusak Berat']),
-            'rt' => fake()->randomElement(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']),
-            'rw' => fake()->randomElement(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']), 
-            'kelurahan' => fake()->randomElement(['Balokang', 'Cibeureum', 'Jajawar', 'Neglasari', 'Banjar', 'Mekarsari', 'Situbatu']),
-            'koordinat' => fake()->latitude() . ',' . fake()->longitude(),
+            'kondisi_jalan_id' => fake()->numberBetween(1, 3),
+            'alamat_id' => Alamat::factory()->create()->id,
             'keterangan' => fake()->sentence(),
         ];
     }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\DataJalan;
 use Illuminate\Http\Request;
+use App\Models\KondisiJalan;
+use App\Models\Alamat;
 
 class DataJalanController extends Controller
 {
@@ -76,7 +78,22 @@ class DataJalanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $alamat = Alamat::create([
+            'kelurahan' => $request->kelurahan,
+            'rt' => $request->rt,
+            'rw' => $request->rw,
+        ]);
+
+        DataJalan::create([
+            'nama' => $request->nama,
+            'panjang' => $request->panjang,
+            'lebar' => $request->lebar,
+            'kondisi_jalan_id' => $request->kondisi,
+            'keterangan' => $request->keterangan,
+            'alamat_id' => $alamat->id,
+        ]);
+
+        return redirect('/data-jalan');
     }
 
     /**
@@ -118,7 +135,7 @@ class DataJalanController extends Controller
             'rw' => $request->rw,
         ]);
 
-        return redirect('/data-jalan');
+        return redirect('/data-jalan/'.$dataJalan->id);
     }
 
     /**

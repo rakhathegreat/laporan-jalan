@@ -10,11 +10,14 @@
             </div>
         </div>
     </x-slot>
-    <div class="overflow-x-auto max-w-7xl mx-auto sm:px-6 lg:px-8 sticky top-0 z-10 bg-white">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="my-4 flex justify-between">
         <button id="deleteButton" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Hapus</button>
         <x-alert>Tidak ada data yang dipilih</x-alert>
-        <x-confirm>Apakah anda yakin ingin menghapus data yang dipilih?</x-confirm>
+        <x-confirm title="Anda akan menghapus data yang dipilih" message="Apakah anda yakin ingin menghapus data yang dipilih?">
+            <button id="cancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+            <button id="delete" type="button" class="btn btn-danger">Hapus</button>
+        </x-confirm>
         <div class="flex gap-4 w-1/3">
             <x-filter></x-filter>
             <form action="/data-jalan" method="get" name="search" class="w-full">
@@ -23,36 +26,38 @@
         </div>
       </div>
       {{ $dataJalan->links() }}
-      <table class="min-w-full bg-white" id="clickableTable">
-        <thead>
-          <tr class="border-b border-gray-300">
-            <th class="py-3 pr-0 pl-4 text-left"><input type="checkbox" name="preference" value="selected" id="selectAll"></th>
-            <th class="py-3 px-0 text-left text-sm font-semibold text-gray-900">No</th>
-            <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">Nama Jalan</th>
-            <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">RT</th>
-            <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">RW</th>
-            <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">Desa/Kelurahan</th>
-            <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">Kondisi</th>
-          </tr>
-        </thead>
-        <tbody class="text-gray-600 text-sm font-light">
-          @foreach ($dataJalan as $data)
-            <tr class=" border-b border-gray-200 hover:bg-gray-100" data-url="/data-jalan/{{ $data->id }}">
-              <td class="pl-4"><input type="checkbox" name="preference" value="{{ $data->id }}"></td>
-              <td class="py-3 pr-6 text-left text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
-              <td class="py-3 px-6 text-left text-sm font-medium text-gray-900">{{ $data->nama }}</td>
-              <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->alamat->rt }}</td>
-              <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->alamat->rw }}</td>
-              <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->alamat->kelurahan }}</td>
-              <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">
-                <x-kondisi kondisi="{{$data->kondisi_jalan->kondisi}}">
-                    {{ $data->kondisi_jalan->kondisi }}
-                </x-kondisi>
-              </td>
+      <div class="overflow-auto max-h-[80vh]">
+        <table class="min-w-full bg-white" id="clickableTable">
+            <thead class="sticky top-0 self-start bg-white shadow-sm">
+            <tr class="border-b border-gray-300">
+                <th class="py-3 pr-0 pl-4 text-left"><input type="checkbox" name="preference" value="selected" id="selectAll"></th>
+                <th class="py-3 px-0 text-left text-sm font-semibold text-gray-900">No</th>
+                <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">Nama Jalan</th>
+                <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">RT</th>
+                <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">RW</th>
+                <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">Desa/Kelurahan</th>
+                <th class="py-3 px-6 text-left text-sm font-semibold text-gray-900">Kondisi</th>
             </tr>
-          @endforeach
-        </tbody>
-      </table>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+            @foreach ($dataJalan as $data)
+                <tr class=" border-b border-gray-200 hover:bg-gray-100" data-url="/data-jalan/{{ $data->id }}">
+                <td class="pl-4"><input type="checkbox" name="preference" value="{{ $data->id }}"></td>
+                <td class="py-3 pr-6 text-left text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
+                <td class="py-3 px-6 text-left text-sm font-medium text-gray-900">{{ $data->nama }}</td>
+                <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->alamat->rt }}</td>
+                <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->alamat->rw }}</td>
+                <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">{{ $data->alamat->kelurahan }}</td>
+                <td class="py-3 px-6 text-left text-sm font-normal text-gray-600">
+                    <x-kondisi kondisi="{{$data->kondisi_jalan->kondisi}}">
+                        {{ $data->kondisi_jalan->kondisi }}
+                    </x-kondisi>
+                </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+      </div>
     </div>
     <form action="/data-jalan/67892e5e966836393c05735e" method="POST" id="deleteForm">
         @csrf

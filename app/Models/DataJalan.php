@@ -14,7 +14,15 @@ class DataJalan extends Model
     use HasFactory, HasUuids;
 
     protected $table = 'data_jalan';
-    protected $guard = [];
+    protected $guarded = [];
+    protected $fillable = [
+        'nama',
+        'panjang',
+        'lebar',
+        'kondisi_jalan_id',
+        'keterangan',
+        'alamat_id',
+    ];
 
     public function alamat()
     {

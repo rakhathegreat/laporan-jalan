@@ -1,20 +1,16 @@
-<div id="alert" {{ $attributes->merge(['class' => 'bg-gray-900 bg-opacity-50 fixed inset-0 flex items-center justify-center hidden']) }}>
-    <div class="flex flex-col gap-4 bg-white p-4 rounded">
-        <div class="flex flex-col gap-2">
-            <strong>Peringatan</strong>
-            <p class="text-sm">{{ $slot }}</p>
-        </div>
-        <button id="closePopup" type="button" class="bg-red-500 hover:bg-red-700 text-white text-sm font-bold py-2 px-4 rounded">Tutup</button>
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast text-bg-danger align-items-center flex" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-body">
+      {{ $slot }}
     </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
 </div>
 
 <script>
-
     function alertAction() {
-        document.getElementById('alert').classList.remove('hidden');
-
-        document.getElementById('closePopup').addEventListener('click', () => {
-        document.getElementById('alert').classList.add('hidden');
-    })
+        const toast = document.getElementById('liveToast');
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
     }
 </script>

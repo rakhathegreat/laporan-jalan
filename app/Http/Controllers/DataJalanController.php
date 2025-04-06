@@ -13,9 +13,15 @@ class DataJalanController extends Controller
     public function index()
     {
         $dataJalan = DataJalan::orderBy('created_at', 'desc');
-        if (request('search')) {
-            $regex = '%' . request('search') . '%';
-            $dataJalan->alamat->where('nama', 'LIKE', $regex);
+        if (request()->filled('search')) {
+            $search = request('search');
+
+            $dataJalan->where(function ($query) use ($search) {
+                $query->where('nama', 'like', "%{$search}%")
+                    ->orWhere('panjang', 'like', "%{$search}%")
+                    ->orWhere('lebar', 'like', "%{$search}%")
+                    ->orWhere('keterangan', 'like', "%{$search}%");
+            });
         }
 
         if (request('kondisi')) {
@@ -43,7 +49,7 @@ class DataJalanController extends Controller
         }
 
         return view('admin.data-jalan', [
-            'dataJalan' => $dataJalan->get()
+            'dataJalan' => $dataJalan->paginate(50)
         ]);
     }
 
@@ -88,7 +94,9 @@ class DataJalanController extends Controller
      */
     public function edit(DataJalan $dataJalan)
     {
-        //
+        return view('admin.edit', [
+            'dataJalan' => $dataJalan
+        ]);
     }
 
     /**
@@ -96,7 +104,21 @@ class DataJalanController extends Controller
      */
     public function update(Request $request, DataJalan $dataJalan)
     {
-        //
+        $dataJalan->update([
+            'nama' => $request->nama,
+            'panjang' => $request->panjang,
+            'lebar' => $request->lebar,
+            'kondisi' => $request->kondisi,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        $dataJalan->alamat->update([
+            'kelurahan' => $request->kelurahan,
+            'rt' => $request->rt,
+            'rw' => $request->rw,
+        ]);
+
+        return redirect('/data-jalan');
     }
 
     /**
